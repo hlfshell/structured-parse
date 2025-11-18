@@ -14,6 +14,7 @@ ts/dist/
 ts/wasm/
 js/dist/
 js/wasm/
+js/node_modules/
 *.tsbuildinfo
 
 # Python
@@ -45,6 +46,8 @@ MANIFEST
 .dmypy.json
 dmypy.json
 python/structured_parse/wasm/
+python/dist/
+python/build/
 
 # IDE
 .vscode/
