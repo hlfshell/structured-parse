@@ -41,6 +41,10 @@ Repository = "https://github.com/hlfshell/structured-parse"
 where = ["."]
 include = ["structured_parse*"]
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.package-data]
 structured_parse = ["wasm/*.wasm"]
+"*" = ["LICENSE", "README.md"]
 
