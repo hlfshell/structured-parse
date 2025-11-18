@@ -39,6 +39,9 @@ build:
     @echo ""
     @just go build
     @echo ""
+    @echo "🔨 Building WASM modules..."
+    @just go build-wasm
+    @echo ""
     @if [ -f "{{project_root}}/python/pyproject.toml" ] || [ -f "{{project_root}}/python/setup.py" ]; then \
         just python build; \
     else \
