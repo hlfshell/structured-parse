@@ -16,6 +16,11 @@ js/dist/
 js/wasm/
 js/node_modules/
 *.tsbuildinfo
+# Copied files from update command
+ts/README.md
+ts/LICENSE
+js/README.md
+js/LICENSE
 
 # Python
 __pycache__/
@@ -48,6 +53,9 @@ dmypy.json
 python/structured_parse/wasm/
 python/dist/
 python/build/
+# Copied files from update command
+python/README.md
+python/LICENSE
 
 # IDE
 .vscode/
