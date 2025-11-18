@@ -3,11 +3,6 @@
 **Parse labeled LLM output into clean, typed data structures.**  
 Core implementation in Go, exported to TypeScript/JavaScript and Python via WebAssembly.
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/hlfshell/structured-parse.svg)](https://pkg.go.dev/github.com/hlfshell/structured-parse)
-[![TypeScript](https://img.shields.io/badge/typescript-5.0+-blue)]()
-[![Python](https://img.shields.io/badge/python-3.8+-blue)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
 ---
 
 ## Why structured-parse?
