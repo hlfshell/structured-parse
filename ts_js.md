@@ -6,21 +6,48 @@
 
 The TypeScript/JavaScript bindings call into the core Go implementation compiled to WebAssembly. Initialization is asynchronous.
 
-Install:
+## Package Selection
+
+We provide two npm packages:
+
+### TypeScript Package (`@hlfshell/structured-parse`)
 
 ```bash
 npm install @hlfshell/structured-parse
 # or
 yarn add @hlfshell/structured-parse
 pnpm add @hlfshell/structured-parse
-````
+```
+
+This package includes:
+- Full TypeScript type definitions
+- TypeScript source code
+- Compiled JavaScript output
+
+### JavaScript Package (`@hlfshell/structured-parse-js`)
+
+```bash
+npm install @hlfshell/structured-parse-js
+# or
+yarn add @hlfshell/structured-parse-js
+pnpm add @hlfshell/structured-parse-js
+```
 
 ---
 
 ## API overview
 
+### TypeScript
+
 ```ts
 import { createParser, type Label, type ParseResult, type ParseBlocksResult } from "@hlfshell/structured-parse";
+```
+
+### JavaScript
+
+```js
+import { createParser } from "@hlfshell/structured-parse-js";
+```
 
 interface Label {
   name: string;
@@ -56,8 +83,17 @@ interface Parser {
 
 Because the core is WebAssembly, you must `await` parser creation:
 
+### TypeScript
+
 ```ts
 import { createParser } from "@hlfshell/structured-parse";
+```
+
+### JavaScript
+
+```js
+import { createParser } from "@hlfshell/structured-parse-js";
+```
 
 async function main() {
   const parser = await createParser();
@@ -71,8 +107,11 @@ main().catch(console.error);
 
 ## Parsing a single record
 
+### TypeScript
+
 ```ts
 import { createParser, type Label } from "@hlfshell/structured-parse";
+```
 
 async function parseSentiment(llmOutput: string) {
   const parser = await createParser();
@@ -99,6 +138,36 @@ async function parseSentiment(llmOutput: string) {
 }
 ```
 
+### JavaScript
+
+```js
+import { createParser } from "@hlfshell/structured-parse-js";
+
+async function parseSentiment(llmOutput) {
+  const parser = await createParser();
+
+  const labels = [
+    { name: "Reason", required: true },
+    { name: "Sentiment", required: true },
+    { name: "Confidence", isJson: true },
+  ];
+
+  const { result, errors } = parser.parse(labels, llmOutput);
+
+  if (errors.length > 0) {
+    console.warn("parse warnings:", errors);
+  }
+
+  const reason = result["Reason"];
+  const sentiment = result["Sentiment"];
+  const confidence = result["Confidence"];
+
+  console.log("Reason:", reason);
+  console.log("Sentiment:", sentiment);
+  console.log("Confidence:", confidence);
+}
+```
+
 Notes:
 
 * Label matching is case-insensitive, but `result` keys use the original `name` values.
@@ -111,8 +180,11 @@ Notes:
 
 ## Parsing multiple blocks
 
+### TypeScript
+
 ```ts
 import { createParser, type Label } from "@hlfshell/structured-parse";
+```
 
 async function parseBlocksExample(llmOutput: string) {
   const parser = await createParser();
@@ -138,7 +210,36 @@ async function parseBlocksExample(llmOutput: string) {
 }
 ```
 
-Each `block` is a `Record<string, unknown>`.
+### JavaScript
+
+```js
+import { createParser } from "@hlfshell/structured-parse-js";
+
+async function parseBlocksExample(llmOutput) {
+  const parser = await createParser();
+
+  const labels = [
+    { name: "Task", isBlockStart: true, required: true },
+    { name: "Status" },
+    { name: "Result" },
+  ];
+
+  const { blocks, errors } = parser.parseBlocks(labels, llmOutput);
+
+  if (errors.length > 0) {
+    console.warn("parse warnings:", errors);
+  }
+
+  blocks.forEach((block, index) => {
+    console.log(`Block ${index + 1}:`);
+    console.log("  Task:", block["Task"]);
+    console.log("  Status:", block["Status"]);
+    console.log("  Result:", block["Result"]);
+  });
+}
+```
+
+Each `block` is a `Record<string, unknown>` (TypeScript) or plain object (JavaScript).
 
 ---
 
@@ -147,6 +248,8 @@ Each `block` is a `Record<string, unknown>`.
 Default separators: `:`, `~`, `-`, `=`.
 
 You can override them:
+
+### TypeScript
 
 ```ts
 const labels: Label[] = [
@@ -159,13 +262,28 @@ const options = { separators: ":" }; // only colon
 const { result, errors } = parser.parse(labels, "Key: foo\nValue: bar", options);
 ```
 
-If a line doesn’t use a configured separator, it will not be recognized as a label line and will be treated as part of the current field’s value.
+### JavaScript
+
+```js
+const labels = [
+  { name: "Key" },
+  { name: "Value" },
+];
+
+const options = { separators: ":" }; // only colon
+
+const { result, errors } = parser.parse(labels, "Key: foo\nValue: bar", options);
+```
+
+If a line doesn't use a configured separator, it will not be recognized as a label line and will be treated as part of the current field's value.
 
 ---
 
 ## Multiline values
 
 Values span multiple lines until the next recognized label:
+
+### TypeScript
 
 ```ts
 const llmOutput = `
@@ -176,6 +294,26 @@ Next Field: Done
 `;
 
 const labels: Label[] = [
+  { name: "Description" },
+  { name: "Next Field" },
+];
+
+const { result } = parser.parse(labels, llmOutput);
+console.log(result["Description"]);
+// "This is a long description\nthat spans multiple lines and will be\ncaptured as a single value."
+```
+
+### JavaScript
+
+```js
+const llmOutput = `
+Description: This is a long description
+that spans multiple lines and will be
+captured as a single value.
+Next Field: Done
+`;
+
+const labels = [
   { name: "Description" },
   { name: "Next Field" },
 ];
@@ -218,8 +356,17 @@ The package can be used in browser environments that support WebAssembly. Typica
 
 Example (simplified):
 
+### TypeScript
+
 ```ts
 import { createParser } from "@hlfshell/structured-parse";
+```
+
+### JavaScript
+
+```js
+import { createParser } from "@hlfshell/structured-parse-js";
+```
 
 let parserPromise: Promise<ReturnType<typeof createParser>> | null = null;
 

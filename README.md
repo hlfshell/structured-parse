@@ -67,6 +67,9 @@ More in [go.md](go.md).
 
 ### TypeScript / JavaScript (Node.js)
 
+We provide two npm packages:
+
+**TypeScript** (with full type definitions):
 ```bash
 npm install @hlfshell/structured-parse
 # or
@@ -75,6 +78,17 @@ yarn add @hlfshell/structured-parse
 
 ```ts
 import { createParser, type Label } from "@hlfshell/structured-parse";
+```
+
+**JavaScript**:
+```bash
+npm install @hlfshell/structured-parse-js
+# or
+yarn add @hlfshell/structured-parse-js
+```
+
+```js
+import { createParser } from "@hlfshell/structured-parse-js";
 ```
 
 More in [ts_js.md](ts_js.md).
