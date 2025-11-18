@@ -1,0 +1,35 @@
+{
+  "name": "@hlfshell/structured-parse",
+  "version": "1.0.0",
+  "description": "Multi-language library for parsing labeled/structured LLM output",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && npm run copy-wasm",
+    "copy-wasm": "mkdir -p dist/wasm && cp wasm/*.wasm dist/wasm/ && cp wasm/*.js dist/wasm/",
+    "test": "node dist/test.js",
+    "benchmark": "node dist/benchmark.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "llm",
+    "parser",
+    "structured-output",
+    "wasm",
+    "ai",
+    "agent"
+  ],
+  "author": "Keith Chester",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
+}
+
