@@ -54,7 +54,7 @@ You can learn more about your target version for each language at:
 ### Go
 
 ```bash
-go get github.com/hlfshell/structured-parse/go/structuredparse
+go get github.com/hlfshell/structured-parse
 ```
 
 ```go
