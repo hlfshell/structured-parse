@@ -12,8 +12,20 @@ install:
     @cd {{project_root}}/ts && npm install
     @echo "✅ TypeScript dependencies installed!"
 
+# Clean TypeScript build artifacts and copied files
+clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "🧹 Cleaning TypeScript artifacts..."
+    cd {{project_root}}/ts
+    # Remove build artifacts
+    rm -rf dist/ *.tsbuildinfo
+    # Remove copied files
+    rm -f README.md LICENSE
+    echo "✅ TypeScript clean complete!"
+
 # Build TypeScript package (requires WASM to be built first)
-build:
+build: update
     @echo "🔨 Building TypeScript..."
     @if [ -f "{{project_root}}/ts/package.json" ]; then \
         if [ ! -f "{{project_root}}/ts/wasm/structured-parse.wasm" ]; then \
@@ -39,7 +51,7 @@ test:
     @echo "✅ TypeScript tests complete!"
 
 # Update TypeScript package: sync version, copy README and LICENSE
-update:
+update: clean
     #!/usr/bin/env bash
     set -euo pipefail
     
@@ -106,7 +118,7 @@ update:
     exit 0
 
 # Publish TypeScript package to npm
-publish:
+publish: build
     #!/usr/bin/env bash
     set -euo pipefail
     
@@ -138,6 +150,7 @@ publish:
 help:
     @echo "Available TypeScript commands:"
     @echo "  ts install  - Install dependencies"
+    @echo "  ts clean    - Remove build artifacts and copied files"
     @echo "  ts build    - Build TypeScript package"
     @echo "  ts test     - Run TypeScript tests"
     @echo "  ts update   - Update version, README, and LICENSE"

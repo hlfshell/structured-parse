@@ -1,0 +1,26 @@
+{
+  "name": "@hlfshell/structured-parse-js",
+  "version": "1.0.1",
+  "description": "JavaScript library for parsing labeled/structured LLM output",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"JavaScript build complete - files copied from TypeScript\"",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "llm",
+    "parser",
+    "structured-output",
+    "wasm",
+    "ai",
+    "agent"
+  ],
+  "author": "Keith Chester",
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
+}

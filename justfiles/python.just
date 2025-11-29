@@ -12,8 +12,23 @@ install:
     @eval "$(pyenv init -)" && eval "$(pyenv virtualenv-init -)" && pyenv activate structured-parse && cd {{project_root}}/python && pip install -e .[dev]
     @echo "✅ Python dependencies installed!"
 
+# Clean Python build artifacts and copied files
+clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "🧹 Cleaning Python artifacts..."
+    cd {{project_root}}/python
+    # Remove build artifacts
+    rm -rf dist/ build/ *.egg-info/ __pycache__/ .pytest_cache/ .mypy_cache/
+    find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+    find . -type f -name "*.pyc" -delete 2>/dev/null || true
+    find . -type f -name "*.pyo" -delete 2>/dev/null || true
+    # Remove copied files
+    rm -f README.md LICENSE
+    echo "✅ Python clean complete!"
+
 # Build Python package (requires WASM to be built first)
-build:
+build: update
     #!/usr/bin/env bash
     set -euo pipefail
     echo "🔨 Building Python package..."
@@ -55,7 +70,7 @@ test:
     echo "✅ Python tests complete!"
 
 # Update Python package: sync version, copy README and LICENSE
-update:
+update: clean
     #!/usr/bin/env bash
     set -euo pipefail
     
@@ -106,7 +121,7 @@ update:
     exit 0
 
 # Publish Python package to PyPI
-publish:
+publish: build
     #!/usr/bin/env bash
     set -euo pipefail
     
@@ -128,6 +143,8 @@ publish:
     
     if [ -f "{{project_root}}/python/pyproject.toml" ] || [ -f "{{project_root}}/python/setup.py" ]; then
         cd {{project_root}}/python
+        # Clean dist/ before building to avoid uploading old versions
+        rm -rf dist/ build/ *.egg-info/
         if command -v twine &> /dev/null; then
             python -m build 2>/dev/null || python setup.py sdist bdist_wheel
             twine upload dist/*
@@ -145,6 +162,7 @@ publish:
 help:
     @echo "Available Python commands:"
     @echo "  python install  - Install dependencies"
+    @echo "  python clean    - Remove build artifacts and copied files"
     @echo "  python build    - Build Python package"
     @echo "  python test     - Run Python tests"
     @echo "  python update   - Update version, README, and LICENSE"

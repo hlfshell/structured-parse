@@ -16,6 +16,7 @@ default:
     @echo "  🤖 structured-parse 🧠"
     @echo "═══════════════════════════════════════════════════════════════"
     @echo ""
+    @echo "  🧹 clean    - Clean all build artifacts and copied files"
     @echo "  🔨 build    - Build all languages"
     @echo "  🧪 test     - Run tests for all languages"
     @echo "  📦 publish  - Publish to package managers (checks git tags)"
@@ -32,6 +33,20 @@ default:
 help: default
 
 # ============================================================================
+# Clean all build artifacts and copied files
+# ============================================================================
+clean:
+    @echo "🧹 Cleaning all build artifacts and copied files..."
+    @echo ""
+    @just python clean
+    @echo ""
+    @just ts clean
+    @echo ""
+    @just js clean
+    @echo ""
+    @echo "✅ All clean complete!"
+
+# ============================================================================
 # Build all languages
 # ============================================================================
 build:
@@ -42,23 +57,11 @@ build:
     @echo "🔨 Building WASM modules..."
     @just go build-wasm
     @echo ""
-    @if [ -f "{{project_root}}/python/pyproject.toml" ] || [ -f "{{project_root}}/python/setup.py" ]; then \
-        just python build; \
-    else \
-        echo "⚠️  Python build not configured yet"; \
-    fi
+    @just python build
     @echo ""
-    @if [ -f "{{project_root}}/ts/package.json" ]; then \
-        just ts build; \
-    else \
-        echo "⚠️  TypeScript build not configured yet"; \
-    fi
+    @just ts build
     @echo ""
-    @if [ -f "{{project_root}}/js/package.json" ]; then \
-        just js build; \
-    else \
-        echo "⚠️  JavaScript build not configured yet"; \
-    fi
+    @just js build
     @echo ""
     @echo "✅ All builds complete!"
 
@@ -70,17 +73,9 @@ test:
     @echo ""
     @just go test
     @echo ""
-    @if [ -f "{{project_root}}/python/pyproject.toml" ] || [ -f "{{project_root}}/python/setup.py" ]; then \
-        just python test; \
-    else \
-        echo "⚠️  Python tests not configured yet"; \
-    fi
+    @just python test
     @echo ""
-    @if [ -f "{{project_root}}/ts/package.json" ]; then \
-        just ts test; \
-    else \
-        echo "⚠️  TypeScript tests not configured yet"; \
-    fi
+    @just ts test
     @echo ""
     @echo "✅ All tests complete!"
 
@@ -115,27 +110,15 @@ publish:
     fi
     
     echo "📦 Publishing Python..."
-    if [ -f "{{project_root}}/python/pyproject.toml" ] || [ -f "{{project_root}}/python/setup.py" ]; then
-        just python publish
-    else
-        echo "⚠️  Python publish not configured yet"
-    fi
+    just python publish
     echo ""
     
     echo "📦 Publishing TypeScript..."
-    if [ -f "{{project_root}}/ts/package.json" ]; then
-        just ts publish
-    else
-        echo "⚠️  TypeScript publish not configured yet"
-    fi
+    just ts publish
     echo ""
     
     echo "📦 Publishing JavaScript..."
-    if [ -f "{{project_root}}/js/package.json" ]; then
-        just js publish
-    else
-        echo "⚠️  JavaScript publish not configured yet"
-    fi
+    just js publish
     echo ""
     
     echo "✅ Publish complete!"

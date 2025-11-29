@@ -1,6 +1,6 @@
 {
   "name": "@hlfshell/structured-parse",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multi-language library for parsing labeled/structured LLM output",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,4 +32,3 @@
     "LICENSE"
   ]
 }
-
