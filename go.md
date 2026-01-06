@@ -8,6 +8,14 @@ Package import:
 import "github.com/hlfshell/structured-parse/go/structuredparse"
 ````
 
+Install:
+
+```bash
+go get github.com/hlfshell/structured-parse/go/structuredparse@latest
+```
+
+Note: the Go API is constructor-based (`NewParser(...)`) rather than class-based (there is no `structuredparse.Class()` method).
+
 ---
 
 ## Types
