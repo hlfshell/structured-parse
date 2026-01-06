@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/hlfshell/structured-parse/go/structuredparse"
+	"github.com/hlfshell/structured-parse/go"
 )
 
 func main() {

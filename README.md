@@ -54,11 +54,11 @@ You can learn more about your target version for each language at:
 ### Go
 
 ```bash
-go get github.com/hlfshell/structured-parse/go/structuredparse@latest
+go get github.com/hlfshell/structured-parse/go@latest
 ```
 
 ```go
-import "github.com/hlfshell/structured-parse/go/structuredparse"
+import structuredparse "github.com/hlfshell/structured-parse/go"
 ```
 
 More in [go.md](go.md).

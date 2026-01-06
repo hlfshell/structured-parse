@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	sp "github.com/hlfshell/structured-parse/go/structuredparse"
+	sp "github.com/hlfshell/structured-parse/go"
 )
 
 // WasmResponse represents the standard response structure for all WASM functions.
