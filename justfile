@@ -19,6 +19,7 @@ default:
     @echo "  🧹 clean    - Clean all build artifacts and copied files"
     @echo "  🔨 build    - Build all languages"
     @echo "  🧪 test     - Run tests for all languages"
+    @echo "  🏷️  tag <vX.Y.Z> - Create release git tags (vX.Y.Z and go/vX.Y.Z)"
     @echo "  📦 publish  - Publish to package managers (checks git tags)"
     @echo ""
     @echo "Language-specific commands:"
@@ -78,6 +79,49 @@ test:
     @just ts test
     @echo ""
     @echo "✅ All tests complete!"
+
+# ============================================================================
+# Create git tags for a release
+# - vX.Y.Z is used by Python/TS/JS publish scripts (they strip a leading "v")
+# - go/vX.Y.Z is used by Go modules for the submodule at /go
+# ============================================================================
+tag version:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    VERSION="{{version}}"
+    if [[ "$VERSION" != v* ]]; then
+        echo "❌ Version must start with 'v' (example: v1.2.3)"
+        exit 1
+    fi
+
+    # Go submodule tags must be prefixed by the subdirectory name.
+    GO_TAG="go/$VERSION"
+
+    # Require clean working tree (tag should point to an exact commit).
+    if ! git diff-index --quiet HEAD --; then
+        echo "❌ You have uncommitted changes. Commit or stash before tagging."
+        exit 1
+    fi
+
+    # Create annotated tags (safe/standard for releases).
+    if git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null; then
+        echo "❌ Tag already exists: $VERSION"
+        exit 1
+    fi
+    if git rev-parse -q --verify "refs/tags/$GO_TAG" >/dev/null; then
+        echo "❌ Tag already exists: $GO_TAG"
+        exit 1
+    fi
+
+    git tag -a "$VERSION" -m "$VERSION"
+    git tag -a "$GO_TAG" -m "$GO_TAG"
+
+    echo "✅ Created tags:"
+    echo "   - $VERSION"
+    echo "   - $GO_TAG"
+    echo ""
+    echo "Next, push tags:"
+    echo "  git push origin $VERSION $GO_TAG"
 
 # ============================================================================
 # Publish to package managers (checks git tags first)
